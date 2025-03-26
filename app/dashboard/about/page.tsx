@@ -2,12 +2,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2 } from "lucide-react";
-import {
-  AboutImage,
-  fetchAboutImages,
-  deleteAboutImage,
-  handleImageUpload,
-} from "@/data/actions/aboutaction";
+import { fetchAboutImages, deleteAboutImage } from "@/data/actions/aboutaction";
 import { AboutForm } from "./about-form";
 
 export default async function AboutPage() {
