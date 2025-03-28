@@ -39,8 +39,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
-import { FAQ, getFAQs, createFAQ, updateFAQ, deleteFAQ } from "@/lib/api";
+
 import { toast } from "sonner";
+import {
+  createFAQ,
+  deleteFAQ,
+  FAQ,
+  getFAQs,
+  updateFAQ,
+} from "@/data/actions/faqAction";
 
 export default function FAQPage() {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
