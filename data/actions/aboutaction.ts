@@ -134,3 +134,91 @@ export async function handleImageUpload(formData: FormData, cardIndex: number) {
 
   return await uploadAboutImage(file, name, cardIndex);
 }
+
+export async function updateAboutImage(
+  id: string,
+  name: string,
+  file: File | null,
+  orderIndex: number
+) {
+  try {
+    // Get current image
+    const { data: currentImage, error: getError } = await supabase
+      .from("about_images")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (getError) throw getError;
+
+    let imageUrl = currentImage.image_url;
+
+    // If a new file was uploaded, update the image
+    if (file) {
+      // Delete the old file
+      const oldFilePath = currentImage.image_url.split("/").pop();
+      await supabase.storage.from("images").remove([`about/${oldFilePath}`]);
+
+      // Upload new file
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Date.now()}-${name
+        .toLowerCase()
+        .replace(/\s+/g, "-")}.${fileExt}`;
+      const filePath = `about/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("images")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("images").getPublicUrl(filePath);
+
+      imageUrl = publicUrl;
+    }
+
+    // Update the database record
+    const { error: updateError } = await supabase
+      .from("about_images")
+      .update({
+        name,
+        image_url: imageUrl,
+      })
+      .eq("id", id);
+
+    if (updateError) throw updateError;
+
+    revalidatePath("/dashboard/about");
+    return { error: null };
+  } catch (error) {
+    console.error("Error updating image:", error);
+    return { error };
+  }
+}
+
+export async function handleImageUpdate(
+  formData: FormData,
+  imageId: string,
+  orderIndex: number
+) {
+  const file = formData.get("file") as File | null;
+  const name = formData.get("name") as string;
+
+  if (!name.trim()) {
+    return { error: "Lütfen resim adı giriniz" };
+  }
+
+  // If a file is provided, validate it
+  if (file && file.size > 0) {
+    const validation = await validateImageFile(file);
+    if (validation.error) {
+      return validation;
+    }
+    return await updateAboutImage(imageId, name, file, orderIndex);
+  }
+
+  // If no file, just update the name
+  return await updateAboutImage(imageId, name, null, orderIndex);
+}

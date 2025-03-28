@@ -6,6 +6,7 @@ import { Trash2 } from "lucide-react";
 import { AboutForm } from "./about-form";
 import { deleteAboutImage, fetchAboutImages } from "@/data/actions/aboutaction";
 import DeleteButton from "./delete-button";
+import EditButton from "./edit-button";
 
 export default async function AboutPage() {
   const { data: images, error } = await fetchAboutImages();
@@ -38,7 +39,7 @@ export default async function AboutPage() {
           return (
             <Card
               key={index}
-              className="relative group bg-zinc-950 min-h-[600px] min-w-[400px] rounded-2xl border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="relative group bg-zinc-950 h-[400px] min-w-[550px] rounded-2xl border-0 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <CardHeader className="absolute top-4 left-4 z-10 p-0">
                 <CardTitle className="text-2xl font-bold text-white bg-black/50 px-4 py-2 rounded-lg">
@@ -46,21 +47,26 @@ export default async function AboutPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="h-full p-6">
-                <div className="relative w-full h-full rounded-xl overflow-hidden">
+                <div className="relative w-full h-full rounded-xl overflow-hidden bg-zinc-900 flex items-center justify-center">
                   {image ? (
                     <>
-                      <Image
-                        src={image.image_url}
-                        alt={image.name}
-                        fill
-                        className="object-cover"
-                        priority
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                      />
+                      <div className="relative w-full h-full flex items-center justify-center p-4">
+                        <Image
+                          src={image.image_url}
+                          alt={image.name}
+                          className="max-w-full max-h-full object-contain"
+                          width={500}
+                          height={300}
+                          style={{ objectFit: "contain" }}
+                          priority
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                        />
+                      </div>
                       <DeleteButton
                         imageId={image.id}
                         imageUrl={image.image_url}
                       />
+                      <EditButton image={image} />
                     </>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-zinc-900 rounded-xl">
