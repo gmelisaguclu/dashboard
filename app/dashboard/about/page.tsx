@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2 } from "lucide-react";
 
-import { AboutForm } from "./about-form";
+import { AboutForm } from "../../../components/about/about-form";
 import { deleteAboutImage, fetchAboutImages } from "@/data/actions/aboutaction";
-import DeleteButton from "./delete-button";
-import EditButton from "./edit-button";
+import DeleteButton from "../../../components/about/delete-button";
+import EditButton from "../../../components/about/edit-button";
 
 export default async function AboutPage() {
   const { data: images, error } = await fetchAboutImages();

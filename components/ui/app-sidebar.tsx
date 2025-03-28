@@ -43,11 +43,11 @@ import {
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 const items = [
-  {
-    title: "Homepage",
-    url: "/dashboard/home",
-    icon: Home,
-  },
+  // {
+  //   title: "Homepage",
+  //   url: "/dashboard/home",
+  //   icon: Home,
+  // },
   {
     title: "About",
     url: "/dashboard/about",
@@ -64,8 +64,8 @@ const items = [
     icon: Handshake,
   },
   {
-    title: "Team",
-    url: "/dashboard/team",
+    title: "Teams",
+    url: "/dashboard/teams",
     icon: Users,
   },
 
