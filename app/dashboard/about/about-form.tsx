@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Upload, Plus } from "lucide-react";
+import { Upload, Plus, Loader2 } from "lucide-react";
 import { handleImageUpload } from "@/data/actions/aboutaction";
 
 interface AboutFormProps {
@@ -15,15 +15,21 @@ interface AboutFormProps {
 export function AboutForm({ cardIndex }: AboutFormProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
-  async function onSubmit(formData: FormData) {
-    const result = await handleImageUpload(formData, cardIndex);
-    if (result.error) {
-      setError(result.error as string);
-    } else {
-      setIsOpen(false);
-      setError(null);
-    }
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+
+    startTransition(async () => {
+      const result = await handleImageUpload(formData, cardIndex);
+      if (result.error) {
+        setError(result.error as string);
+      } else {
+        setIsOpen(false);
+        setError(null);
+      }
+    });
   }
 
   if (!isOpen) {
@@ -49,7 +55,7 @@ export function AboutForm({ cardIndex }: AboutFormProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form action={onSubmit} className="flex flex-col gap-6">
+          <form onSubmit={onSubmit} className="flex flex-col gap-6">
             {error && (
               <div
                 className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg"
@@ -95,15 +101,21 @@ export function AboutForm({ cardIndex }: AboutFormProps) {
                   setError(null);
                 }}
                 className="bg-transparent border-zinc-700 text-white hover:bg-zinc-800"
+                disabled={isPending}
               >
                 İptal
               </Button>
               <Button
                 type="submit"
                 className="bg-white text-black hover:bg-zinc-200"
+                disabled={isPending}
               >
-                <Upload className="h-4 w-4 mr-2" />
-                Yükle
+                {isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : (
+                  <Upload className="h-4 w-4 mr-2" />
+                )}
+                {isPending ? "Yükleniyor..." : "Yükle"}
               </Button>
             </div>
           </form>

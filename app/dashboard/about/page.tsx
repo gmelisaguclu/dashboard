@@ -5,6 +5,7 @@ import { Trash2 } from "lucide-react";
 
 import { AboutForm } from "./about-form";
 import { deleteAboutImage, fetchAboutImages } from "@/data/actions/aboutaction";
+import DeleteButton from "./delete-button";
 
 export default async function AboutPage() {
   const { data: images, error } = await fetchAboutImages();
@@ -56,22 +57,10 @@ export default async function AboutPage() {
                         priority
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                       />
-                      <form
-                        action={async () => {
-                          "use server";
-                          await deleteAboutImage(image.id, image.image_url);
-                        }}
-                        className="absolute top-2 right-2"
-                      >
-                        <Button
-                          type="submit"
-                          variant="destructive"
-                          size="icon"
-                          className="w-10 h-10 shadow-lg hover:shadow-xl"
-                        >
-                          <Trash2 className="h-5 w-5" />
-                        </Button>
-                      </form>
+                      <DeleteButton
+                        imageId={image.id}
+                        imageUrl={image.image_url}
+                      />
                     </>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-zinc-900 rounded-xl">
