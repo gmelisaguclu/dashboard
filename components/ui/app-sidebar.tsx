@@ -39,9 +39,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-// import { signOut } from "@/data/actions/userActions";
+
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import { logout } from "@/data/actions/authActions";
+import { toast } from "sonner";
 const items = [
   // {
   //   title: "Homepage",
@@ -81,8 +83,10 @@ export function AppSidebar() {
   const router = useRouter();
   const handleSignOut = async () => {
     try {
-      //   await signOut();
-      router.push("/");
+      await logout();
+      toast.success("Çıkış işlemi başarılı bir şekilde gerçekleştirildi.");
+
+      router.push("/auth/login");
     } catch (error) {
       console.error("Çıkış işlemi sırasında hata oluştu:", error);
     }
