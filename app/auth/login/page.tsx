@@ -37,6 +37,8 @@ export default function LoginPage() {
         throw new Error("Login failed");
       }
 
+      console.log(dt, "dt");
+
       toast.success("Successfully logged in");
       router.push("/dashboard/about");
     } catch (error: any) {
